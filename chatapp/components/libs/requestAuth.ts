@@ -8,7 +8,6 @@ axiosJWTClient.interceptors.request.use(
         const localJWT = localStorage.getItem("token");
         if (localJWT && config.headers) {
             config.headers.Authorization = 'Bearer ' + localJWT;
-            console.log(localJWT)
             return config
         }
         else {
