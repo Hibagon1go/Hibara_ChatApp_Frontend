@@ -21,7 +21,7 @@ const SignUp: NextPage = () => {
         router.push(ROOM_LIST_PATH);
       })
       .catch((error) => {
-        console.log(error.message);
+        alert(error.message);
       });
   };
 
