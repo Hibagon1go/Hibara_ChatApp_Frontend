@@ -11,7 +11,7 @@ const Login: NextPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const LOGIN_URL = `${backend.BACKEND_BASE_URL}/login`;
-  const ROOM_LIST_PATH = "/room_list";
+  const ROOM_LIST_PATH = "/room";
 
   /**
   useEffect(() => {
@@ -30,7 +30,7 @@ const Login: NextPage = () => {
         router.push(ROOM_LIST_PATH);
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.message);
       });
   };
 

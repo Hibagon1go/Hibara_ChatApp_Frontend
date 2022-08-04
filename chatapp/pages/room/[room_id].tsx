@@ -8,7 +8,8 @@ import styles from "../../styles/Home.module.css";
 
 const ChatRoom: NextPage = () => {
   const router = useRouter();
-  const { room_id }: any = router.query;
+  const query = router.query;
+  const { room_id }: any = query;
   const FETCH_ALL_MSGS_API_URL = `${backend.BACKEND_BASE_URL}/api/msg?chat_room_id=${room_id}`;
   const MSG_API_URL = `${backend.BACKEND_BASE_URL}/api/msg`;
   const [text, setText] = useState("");
@@ -33,21 +34,20 @@ const ChatRoom: NextPage = () => {
   ]);
 
   useEffect(() => {
-    axiosJWTClient.get(FETCH_ALL_MSGS_API_URL).then((res) => {
-      setMsgs(res.data);
-      console.log(JSON.stringify(res.data));
-    });
-  }, []);
+    if (router.isReady) {
+      axiosJWTClient.get(FETCH_ALL_MSGS_API_URL).then((res) => {
+        setMsgs(res.data);
+        console.log(JSON.stringify(res.data));
+      });
+    }
+  }, [query, router]);
 
   const sendMsg = (text: string) => {
     axiosJWTClient
-      .post(
-        MSG_API_URL,
-        {
-          text: text,
-          chat_room_id: room_id,
-        }
-      )
+      .post(MSG_API_URL, {
+        text: text,
+        chat_room_id: room_id,
+      })
       .then((res) => {
         console.log(JSON.stringify(res.data));
       });
@@ -75,85 +75,82 @@ const ChatRoom: NextPage = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>チャット詳細</title>
-        <meta name="description" content="Chat Detail" />
-      </Head>
+    <>
+      <div className={styles.container}>
+        <Head>
+          <title>チャット詳細</title>
+          <meta name="description" content="Chat Detail" />
+        </Head>
 
-      <main className={styles.main}>
-        {msgs.map((msg, key) => {
-          return (
-            <div key={key}>
-              <h3>{msg.name}</h3>
-              <p>
-                {msg.text} {msg.created_at != msg.updated_at && "編集済み"}
-              </p>
-              <button
-                onClick={() => {
-                  setWillEdit(true);
-                  setEditingMsgID(msg.id);
-                  setEditingText(msg.text);
-                }}
-              >
-                編集する
-              </button>
-              <button
-                onClick={() => {
-                  deleteMsg(msg.id);
-                }}
-              >
-                削除する
-              </button>
+        <main className={styles.main}>
+          {/** メッセージ表示系 */}
+          <div className="flex-1 p:2 sm:p-6 justify-between flex flex-col h-screen">
+            <div
+              id="messages"
+              className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
+            >
+              {msgs.map((msg, key) => {
+                const isMine = key % 2 === 0; // FIXME:const isMine = msg.name === hogehoge_name; // TODO: 自分のnameがわからん
+                const justifyEndOrStart = isMine
+                  ? "justify-end"
+                  : "justify-start";
+                return (
+                  <div key={key} className="chat-message">
+                    <div className={`flex items-end ${justifyEndOrStart}`}>
+                      <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
+                        <div>
+                          <span className="px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white ">
+                            {msg.text}{" "}
+                            {msg.created_at != msg.updated_at && "編集済み"}
+                          </span>
+                        </div>
+                      </div>
+                      <img
+                        src="https://images.unsplash.com/photo-1590031905470-a1a1feacbb0b?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144"
+                        alt="My profile"
+                        className="w-6 h-6 rounded-full order-2"
+                      />
+                      <a>{msg.name}</a>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          );
-        })}
-        {willEdit ? (
-          <div>
-            <input
-              value={editingText}
-              onChange={(event) => setEditingText(event.target.value)}
-            />
-            <button
-              onClick={() => {
-                editMsg(editingMsgID, editingText);
-                setWillEdit(false);
-              }}
-            >
-              メッセージを更新する！
-            </button>
-          </div>
-        ) : (
-          <div>
-            <input
-              value={text}
-              onChange={(event) => setText(event.target.value)}
-            />
-            <button
-              onClick={() => {
-                sendMsg(text);
-              }}
-            >
-              メッセージを送信する
-            </button>
-          </div>
-        )}
 
-        <button
-          onClick={() => {
-            axiosJWTClient
-              .get(FETCH_ALL_MSGS_API_URL, {
-              })
-              .then((res) => {
-                setMsgs(res.data);
-                console.log(JSON.stringify(res.data));
-              });
-          }}
-        >
-          更新
-        </button>
-      </main>
-    </div>
+            {/** メッセージ送信のinput系 */}
+            <div className="grid grid-cols-6">
+              <div className="col-span-5">
+                <input
+                  type="text"
+                  value={text}
+                  onChange={(event) => setText(event.target.value)}
+                  placeholder="メッセージをここに!"
+                  className="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-200 rounded-md py-3"
+                />
+              </div>
+              <div className="col-span-1 text-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    sendMsg(text);
+                  }}
+                  className="inline-flex text-center mx-2 w-full items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="h-6 w-6 ml-2 transform rotate-90"
+                  >
+                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </>
   );
 };
 
