@@ -50,6 +50,9 @@ const ChatRoom: NextPage = () => {
       })
       .then((res) => {
         console.log(JSON.stringify(res.data));
+      })
+      .catch((error) => {
+        alert(error.message);
       });
   };
 
@@ -60,7 +63,10 @@ const ChatRoom: NextPage = () => {
         text: text,
       })
       .then((res) => {
-        console.log(JSON.stringify(res.data));
+        alert(res.data.message);
+      })
+      .catch((error) => {
+        alert(error.message);
       });
   };
 
@@ -70,7 +76,10 @@ const ChatRoom: NextPage = () => {
         data: { ID: msgID },
       })
       .then((res) => {
-        console.log(JSON.stringify(res.data));
+        alert(res.data.message);
+      })
+      .catch((error) => {
+        alert(error.message);
       });
   };
 

@@ -37,15 +37,15 @@ const RoomList: NextPage = () => {
 
   const [joiningRooms, setJoiningRooms] = useState<JoiningRoom[]>([
     {
-      chat_room_id: "wowow",
-      name: "wowowowow",
+      chat_room_id: "",
+      name: "",
     },
   ]);
 
   const [allRooms, setAllRooms] = useState<ChatRoom[]>([
     {
-      id: "dfasd",
-      name: "fsadfas",
+      id: "",
+      name: "",
       created_at: "",
       updated_at: "",
     },
@@ -84,6 +84,9 @@ const RoomList: NextPage = () => {
       })
       .then((res) => {
         router.push(ROOM_PATH + res.data.chat_room_id);
+      })
+      .catch((error) => {
+        alert(error.message);
       });
   };
 
@@ -93,7 +96,10 @@ const RoomList: NextPage = () => {
         chat_room_id: chatRoomID,
       })
       .then((res) => {
-        console.log(JSON.stringify(res.data.message));
+        alert(res.data.message);
+      })
+      .catch((error) => {
+        alert(error.message);
       });
   };
 
@@ -110,7 +116,10 @@ const RoomList: NextPage = () => {
         data: { chat_room_id: chatRoomID },
       })
       .then((res) => {
-        console.log(JSON.stringify(res.data.message));
+        alert(res.data.message);
+      })
+      .catch((error) => {
+        alert(error.message);
       });
   };
 

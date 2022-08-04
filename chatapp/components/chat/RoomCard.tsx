@@ -16,7 +16,7 @@ const RoomCard: React.FC<RoomCardProps> = (props) => {
       <div className="max-w-screen-2xl px-4 md:px-8 mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-center bg-gray-100 rounded-lg gap-4 p-4 md:p-8">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold">{room.name}</h2>
+            <h2 className="text-xl md:text-2xl font-bold">#{room.name}</h2>
           </div>
           <div>
             {isNewRoom ? (
