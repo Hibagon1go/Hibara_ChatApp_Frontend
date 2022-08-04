@@ -22,7 +22,7 @@ const RoomCard: React.FC<RoomCardProps> = (props) => {
             {isNewRoom ? (
               <button
                 onClick={() => {
-                  props.joinNewRoom && props.joinNewRoom(room.chat_room_id);
+                  props.joinNewRoom && props.joinNewRoom(room.id);
                 }}
                 className="m-1 inline-block bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 focus-visible:ring ring-indigo-300 text-white text-sm md:text-base font-semibold text-center rounded-lg outline-none transition duration-100 px-8 py-3"
               >

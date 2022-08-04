@@ -229,7 +229,7 @@ const RoomList: NextPage = () => {
               onClick={joinRoomCloseModal}
               className="rounded bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
             >
-              閉じる!
+              閉じる
             </button>
           </div>
         </Modal>
