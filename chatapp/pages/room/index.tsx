@@ -3,11 +3,11 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Modal, { Styles } from "react-modal";
-import RoomCard from "../components/chat/RoomCard";
-import ColorfulButton from "../components/common/ColorfulButton";
-import axiosJWTClient from "../components/libs/requestAuth";
-import { backend } from "../constants/api";
-import styles from "../styles/Home.module.css";
+import RoomCard from "../../components/chat/RoomCard";
+import ColorfulButton from "../../components/common/ColorfulButton";
+import axiosJWTClient from "../../components/libs/requestAuth";
+import { backend } from "../../constants/api";
+import styles from "../../styles/Home.module.css";
 
 Modal.setAppElement("#__next");
 
@@ -17,7 +17,7 @@ const RoomList: NextPage = () => {
   const JOIN_NEW_ROOM_API_URL = `${backend.BACKEND_BASE_URL}/api/chatroom/join`;
   const FETCH_ALL_ROOMS_API_URL = `${backend.BACKEND_BASE_URL}/api/chatroom/all`;
   const FETCH_JOINING_ROOM_API_URL = `${backend.BACKEND_BASE_URL}/api/chatroom/joining`;
-  const Leave_ROOM_API_URL = `${backend.BACKEND_BASE_URL}/api/chatroom/chatroom/leave`;
+  const Leave_ROOM_API_URL = `${backend.BACKEND_BASE_URL}/api/chatroom/leave`;
   const ROOM_PATH = "/room/";
   const [newRoomName, setNewRoomName] = useState("");
   const [buildRoomModalIsOpen, setBuildRoomIsOpen] = useState(false);
@@ -203,19 +203,27 @@ const RoomList: NextPage = () => {
           onAfterOpen={fetchAllRooms}
           style={customStyles}
         >
-          {allRooms.map((room, key) => {
-            return (
-              <div key={key}>
-                {/** 参加ボタンのみ表示 */}
-                <RoomCard
-                  room={room}
-                  joinNewRoom={joinNewRoom}
-                  isNewRoom={true}
-                  ROOM_PATH={ROOM_PATH}
-                />
-              </div>
-            );
-          })}
+          {allRooms
+            .filter(
+              (room) =>
+                !joiningRooms.includes({
+                  chat_room_id: room.id,
+                  name: room.name,
+                })
+            )
+            .map((room, key) => {
+              return (
+                <div key={key}>
+                  {/** 参加ボタンのみ表示 */}
+                  <RoomCard
+                    room={room}
+                    joinNewRoom={joinNewRoom}
+                    isNewRoom={true}
+                    ROOM_PATH={ROOM_PATH}
+                  />
+                </div>
+              );
+            })}
           <div className="text-right">
             <button
               onClick={joinRoomCloseModal}

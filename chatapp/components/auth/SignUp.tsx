@@ -11,7 +11,7 @@ const SignUp: NextPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const SIGNUP_URL = "https://uttc-chat-backend-2hm5jnzxea-an.a.run.app/signup";
-  const ROOM_LIST_PATH = "/room_list";
+  const ROOM_LIST_PATH = "/room";
 
   const signUpHandler = () => {
     axios
@@ -21,7 +21,7 @@ const SignUp: NextPage = () => {
         router.push(ROOM_LIST_PATH);
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.message);
       });
   };
 
