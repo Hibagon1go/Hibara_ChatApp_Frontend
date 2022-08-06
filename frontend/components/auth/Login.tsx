@@ -5,32 +5,26 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { backend } from "../../constants/api";
 import ColorfulButton from "../common/ColorfulButton";
+import { toast } from "react-toastify";
 
 const Login: NextPage = () => {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const LOGIN_URL = `${backend.BACKEND_BASE_URL}/login`;
   const ROOM_LIST_PATH = "/room";
 
-  /**
-  useEffect(() => {
-    const isLogedIn = localStorage.getItem("token") !== null;
-    if (isLogedIn) {
-      router.push(ROOM_LIST_PATH);
-    }
-  }, []);
-   */
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const loginHandler = () => {
     axios
       .post(LOGIN_URL, { email: email, password: password })
       .then((res) => {
         localStorage.setItem("token", res.data.token);
+        toast(res.data.message);
         router.push(ROOM_LIST_PATH);
       })
       .catch((error) => {
-        alert(error.message);
+        toast(error.response.data.message);
       });
   };
 

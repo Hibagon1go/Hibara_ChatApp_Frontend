@@ -19,7 +19,7 @@ class Document extends NextDocument<Props> {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Powered by Yoichiro Hibara
+            Developed by Yoichiro Hibara
           </a>
         </footer>
       </Html>
