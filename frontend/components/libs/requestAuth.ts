@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { toast } from 'react-toastify';
 
 const axiosJWTClient = axios.create()
 
@@ -11,7 +11,7 @@ axiosJWTClient.interceptors.request.use(
             return config
         }
         else {
-            alert('ログインしなおして下さい')
+            toast('ログインしなおして下さい')
             return 
         }   
     },

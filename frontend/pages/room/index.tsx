@@ -8,6 +8,7 @@ import ColorfulButton from "../../components/common/ColorfulButton";
 import axiosJWTClient from "../../components/libs/requestAuth";
 import { backend } from "../../constants/api";
 import styles from "../../styles/Home.module.css";
+import { toast } from "react-toastify";
 
 Modal.setAppElement("#__next");
 
@@ -35,21 +36,9 @@ const RoomList: NextPage = () => {
     updated_at: string;
   }
 
-  const [joiningRooms, setJoiningRooms] = useState<JoiningRoom[]>([
-    {
-      chat_room_id: "",
-      name: "",
-    },
-  ]);
+  const [joiningRooms, setJoiningRooms] = useState<JoiningRoom[]>([]);
 
-  const [allRooms, setAllRooms] = useState<ChatRoom[]>([
-    {
-      id: "",
-      name: "",
-      created_at: "",
-      updated_at: "",
-    },
-  ]);
+  const [allRooms, setAllRooms] = useState<ChatRoom[]>([]);
 
   const customStyles: Styles = {
     overlay: {
@@ -86,7 +75,7 @@ const RoomList: NextPage = () => {
         router.push(ROOM_PATH + res.data.chat_room_id);
       })
       .catch((error) => {
-        alert(error.message);
+        toast(error.response.data.message);
       });
   };
 
@@ -96,10 +85,11 @@ const RoomList: NextPage = () => {
         chat_room_id: chatRoomID,
       })
       .then((res) => {
-        alert(res.data.message);
+        toast(res.data.message);
+        router.push(ROOM_PATH + chatRoomID);
       })
       .catch((error) => {
-        alert(error.message);
+        toast(error.response.data.message);
       });
   };
 
@@ -116,10 +106,10 @@ const RoomList: NextPage = () => {
         data: { chat_room_id: chatRoomID },
       })
       .then((res) => {
-        alert(res.data.message);
+        toast(res.data.message);
       })
       .catch((error) => {
-        alert(error.message);
+        toast(error.response.data.message);
       });
   };
 
@@ -142,11 +132,12 @@ const RoomList: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>ルーム一覧</title>
+        <title>チャンネル一覧</title>
         <meta name="description" content="Room List of you" />
       </Head>
 
       <main className={styles.main}>
+        <h2 className="text-xl md:text-2xl font-bold">チャンネル一覧</h2>
         <div>
           {joiningRooms.map((joiningRoom, key) => {
             return (
